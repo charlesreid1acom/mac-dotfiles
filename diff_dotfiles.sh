@@ -4,7 +4,7 @@
 #find . -type f -maxdepth 1 -name ".*" | xargs -t -n1 -I% diff % ~/%
 
 # The (more careful) loop version:
-for file in $(find . -type f -maxdepth 1 -name ".*"); do
+for file in $(find ${PWD} -type f -maxdepth 1 -name ".*" | xargs -n1 basename); do
     if [[ -f ~/$file ]]; then
         echo "------------"
         echo "$file exists in home directory, calculating diff..."
