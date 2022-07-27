@@ -8,6 +8,9 @@
 [user]
     email = charlesreid1@gmail.com
     name = Charles Reid
+    #signingkey = 0000000000000000
+[commit]
+    gpgsign = false
 [credential]
     helper = cache
 [filter "media"]
@@ -116,7 +119,7 @@
     # Commit all changes
     ca = !git add -A && git commit -av
 
-    # Switch to a branch, creating it 
+    # Switch to a branch, creating it
     # from the current branch if necessary
     go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
@@ -258,11 +261,11 @@
     enabled = true
     autoupdate = true
 [pull]
-	rebase = true
+    rebase = true
 [init]
-	defaultBranch = main
+    defaultBranch = main
 [filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
