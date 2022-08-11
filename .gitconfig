@@ -5,12 +5,17 @@
 ## replace any git@github stuff with gh:
 ## replace any ssh://git@g.... with cmr:
 
-[user]
-    email = charlesreid1@gmail.com
-    name = Charles Reid
-    #signingkey = 0000000000000000
 [commit]
-    gpgsign = false
+    gpgsign = true
+[user]
+    email = creid@ancestry.com
+    name = Chaz Reid
+    signingkey = 9E17D1E38AC54800
+[includeIf "gitdir:~/codes/"]
+    path = .gitconfig_gh_charlesreid1acom
+[includeIf "gitdir:~/acom/"]
+    path = .gitconfig_ancestry
+
 [credential]
     helper = cache
 [filter "media"]
@@ -230,31 +235,6 @@
 
 # URL shorthands
 
-
-[url "ssh://git@git.charlesreid1.com:222/"]
-
-    insteadOf = "cmr:"
-
-
-[url "git@github.com:"]
-
-    insteadOf = "gh:"
-    pushInsteadOf = "github:"
-    pushInsteadOf = "git://github.com/"
-
-[url "git://github.com/"]
-
-    insteadOf = "github:"
-
-[url "git@gist.github.com:"]
-
-    insteadOf = "gst:"
-    pushInsteadOf = "gist:"
-    pushInsteadOf = "git://gist.github.com/"
-
-[url "git://gist.github.com/"]
-
-    insteadOf = "gist:"
 
 [rerere]
 
