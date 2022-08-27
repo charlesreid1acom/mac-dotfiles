@@ -321,7 +321,10 @@ alias back='cd $OLDPWD'
 
 
 
-
+if [[ "$HOSTNAME" == "otto" ]]; then
+    alias pups2='pups -c ~/.acom/pups.l2.config'
+    alias pups3='pups -c ~/.acom/pups.l3.config'
+fi
 
 
 

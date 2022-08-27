@@ -12,42 +12,44 @@ GIT_EDITOR="vim"
 # Better man pages
 PAGER="most"
 
-# Go stuff
-GOROOT=$HOME/go
-GOPATH=$HOME/go
-
 # Set $PATH here
 PATH="${HOME}/scripts:${PATH}"
-PATH="/usr/local/bin:$PATH"
-PATH="/usr/local/sbin:${PATH}" # homebrew admin tools
-PATH="${PATH}:${GOROOT}/bin"
-PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
-PATH="${HOME}/bin:${PATH}"
-if [[ ("$HOSTNAME" == "seawater") || ("$HOSTNAME" == "bascom") ]]; then
-    PATH="${HOME}/bin/elasticsearch-5.4.2/bin:${PATH}"
 
-    # assume-role cli util:
-    # Add homebrew-installed ruby to path:
-    # (WARNING: THIS CAN CAUSE PROBLEMS!)
-    export PATH="/usr/local/opt/ruby/bin:$PATH"
-
-    # Add homebrew-ruby-gem-installed packages to path:
-    export PATH="/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
-
-    # aws - load config file when using assume-role
-    export AWS_SDK_LOAD_CONFIG="1"
-fi
+# set up gpg
+export GPG_TTY=$(tty)
 
 # Tell git not to look for getext.sh
 # since pyenv has trouble with that
 export GIT_INTERNAL_GETTEXT_TEST_FALLBACKS=1
 
-if [[ "$HOSTNAME" == "bascom" ]]; then
-    # git tab completion
-    source ${HOME}/.git-completion.bash
+
+# brew
+if [[ "$HOSTNAME" == "otto" ]]; then
+    HOMEBREW_PATH="/opt/homebrew"
+else
+    HOMEBREW_PATH="/usr/local"
 fi
 
+# git tab completion
+test -f ${HOME}/.git-completion.bash && source ${HOME}/.git-completion.bash
+
+export PATH="${HOMEBREW_PATH}/bin:${PATH}"
+export PATH="${HOMEBREW_PATH}/sbin:${PATH}" # homebrew admin tools
+export PATH="${HOMEBREW_PATH}/opt/coreutils/libexec/gnubin:${PATH}"
+PATH="${HOME}/bin:${PATH}"
+
+# Enable tab completion for `g` by marking it as an alias for `git`
+if type _git &> /dev/null && [ -f ${HOMEBREW_PATH}/etc/bash_completion.d/git-completion.bash ]; then
+	complete -o default -o nospace -F _git g;
+
+elif type _git &> /dev/null && [ -f ${HOMEBREW_PATH}/etc/profile.d/bash_completion.sh ]; then
+	complete -o default -o nospace -F _git g;
+
+fi;
+
 if [[ "$HOSTNAME" == "maya" ]]; then
+
+    export PATH="${HOMEBREW_PATH}/opt/openjdk@11/bin:$PATH"
 
 	# Setting PATH for homebrew
 	PATH="$HOME/.local/bin:$PATH"
@@ -55,7 +57,7 @@ if [[ "$HOSTNAME" == "maya" ]]; then
 
     # pypy
     # this should go after /usr/local/bin
-    PATH="${PATH}:/usr/local/share/pypy3"
+    PATH="${PATH}:${HOMEBREW_PATH}/share/pypy3"
 
     ### # some weird new homebrew thing??
     ### # this is where python -> python3 lives now
@@ -63,45 +65,21 @@ if [[ "$HOSTNAME" == "maya" ]]; then
     ### PATH="/usr/local/opt/python/libexec/bin:${PATH}"
 
 	# Set up google cloud SDK
-	F1="/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-	F2="/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
+	F1="${HOMEBREW_PATH}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+	F2="${HOMEBREW_PATH}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
 	if [[ -f $F1 ]]; then
 		source $F1
 	fi
 	if [[ -f $F2 ]]; then
 		source $F2
 	fi
-
-    # git tab completion
-    source ${HOME}/.git-completion.bash
-
-    # Enable tab completion for `g` by marking it as an alias for `git`
-    if type _git &> /dev/null && [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
-    	complete -o default -o nospace -F _git g;
-    fi;
 fi
-
-
-# goenv installer
-export GOENV_ROOT="$HOME/.goenv"
-export PATH="$GOENV_ROOT/bin:$PATH"
-
-# Only enable this if you are using go.
-# This will add half a second every time you
-# open a new shell.
-#eval "$(goenv init -)"
 
 # pyenv installer
 # https://github.com/pyenv/pyenv-installer
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-
-export PATH
-
-# Just let homebrew take care of PYTHONPATH, yeah?
-# But if you really needed to, you could set it here.
+export PATH="/Users/creid/.pyenv/shims:${PATH}"
 
 
 # Bash history
@@ -167,10 +145,3 @@ shopt -s cdspell;
 if [ -f /etc/bash_completion ]; then
 	source /etc/bash_completion;
 fi;
-
-if [[ "$HOSTNAME" == "bascom" ]]; then
-    # Enable tab completion for `g` by marking it as an alias for `git`
-    if type _git &> /dev/null && [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
-    	complete -o default -o nospace -F _git g;
-    fi;
-fi
